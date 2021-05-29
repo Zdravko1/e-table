@@ -6,6 +6,7 @@
 #include "Cell.h"
 
 using uint = unsigned int;
+using string = std::string;
 
 class Table
 {
@@ -15,20 +16,13 @@ class Table
 		uint longestCellLength = 0;
 		std::map<uint, std::vector<Cell>> table;
 
-		void parseRow(std::string rawRow, uint rowId);
-		Cell parseCell(std::string rawCell, uint rowId, uint columnId);
-		CellType parseCellType(std::string rawContent);
-
-		// move to parser
-		bool isInteger(std::string rawContent);
-		bool isDecimal(std::string rawContent);
+		void parseRow(string rawRow, uint rowId);
+		void printRowCells(const std::vector<Cell> &rowCells);
+		void printEmptyRowCells(const std::vector<Cell> &rowCells);
+		string formatCellContent(const string &cellContent, uint whiteSpaces);
 
 	public:
 		Table() {}
-		Table(uint rowCount, uint columnCount) {
-			this->rowCount = rowCount;
-			this->columnCount = columnCount;
-		}
 		void open(std::string fileName);
 		void print();
 		// TODO: implement
@@ -39,9 +33,6 @@ class Table
 		void help();
 		void exit();
 		// end implement
-
-		uint getRowCount() const;
-		uint getColumnCount() const;
 };
 
 #endif
