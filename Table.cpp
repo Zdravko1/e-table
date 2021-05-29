@@ -120,6 +120,6 @@ string Table::formatCellContent(const string &cellContent, uint whiteSpaces) {
   intervals[whiteSpaces] = '\0';
   content += intervals;
 
-  delete intervals;
+  delete[] intervals;
   return content;
 }
