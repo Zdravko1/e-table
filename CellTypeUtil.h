@@ -42,6 +42,10 @@ class CellTypeUtil {
     static bool isFormula(const string &rawContent) {
       return rawContent.size() > 1 && rawContent[0] == '=';
     }
+
+    static bool isString(const string &rawContent) {
+      return rawContent.size() > 2 && rawContent[0] == '"' && rawContent[rawContent.size() - 1] == '"';
+    }
 };
 
 #endif

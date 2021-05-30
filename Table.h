@@ -11,28 +11,32 @@ using string = std::string;
 class Table
 {
 	private:
-		uint rowCount;
-		uint columnCount;
+		uint rowCount = 0;
+		uint columnCount = 0;
 		uint longestCellLength = 0;
-		std::map<uint, std::vector<Cell>> table;
+		string file;
+		std::map<uint, std::vector<Cell>> parsedTable;
 
+		void evaluateCells();
 		void parseRow(string rawRow, uint rowId);
 		void printRowCells(const std::vector<Cell> &rowCells);
 		void printEmptyRowCells(const std::vector<Cell> &rowCells);
 		string formatCellContent(const string &cellContent, uint whiteSpaces);
+		Cell* getCell(uint row, uint col);
 
 	public:
 		Table() {}
-		void open(std::string fileName);
+		void open(string fileName);
 		void print();
 		// TODO: implement
-		void edit(/*row col content?*/);
+		void edit(uint row, uint col, const string &content);
 		void close();
 		void save();
-		void saveAs(std::string fileName);
+		void saveAs(const string &fileName);
 		void help();
-		void exit();
 		// end implement
+
+		friend std::ostream& operator<<(std::ostream &os, const Table &table);
 };
 
 #endif

@@ -5,7 +5,8 @@ enum class CellType {
   INTEGER,
   DECIMAL,
   STRING,
-  FORMULA
+  FORMULA,
+  UNKNOWN
 };
 
 #endif

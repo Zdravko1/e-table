@@ -1,5 +1,6 @@
 #include "CellParser.h"
 #include "CellTypeUtil.h"
+#include "CellTypeException.h"
 
 Cell CellParser::parseCell(string rawCell, uint rowId, uint columnId) {
   string content = rawCell;
@@ -8,6 +9,11 @@ Cell CellParser::parseCell(string rawCell, uint rowId, uint columnId) {
   content = trim(content);
   // determine the cell type, eg. INTEGER/DECIMAL/STRING/FORMULA
   CellType cellType = parseCellType(content);
+
+  if (cellType == CellType::UNKNOWN) {
+    throw CellTypeException(rowId, columnId, rawCell);
+  }
+
   // remove quotes in case of "Hello world!" or "\"Quotes\""
   content = removeQuotes(content, cellType);
   
@@ -52,7 +58,7 @@ string CellParser::trim(string rawContent) {
   return content;
 }
 
-CellType CellParser::parseCellType(string rawContent) {
+CellType CellParser::parseCellType(const string &rawContent) {
   if (CellTypeUtil::isInteger(rawContent)) {
     return CellType::INTEGER;
   }
@@ -66,7 +72,11 @@ CellType CellParser::parseCellType(string rawContent) {
     return CellType::FORMULA;
   }
 
-  return CellType::STRING;
+  if (CellTypeUtil::isString(rawContent)) {
+    return CellType::STRING;
+  }
+
+  return CellType::UNKNOWN;
 }
 
 string CellParser::removeQuotes(string rawContent, CellType cellType) {
