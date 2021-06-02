@@ -18,8 +18,7 @@ void Table::open(std::string fileName) {
 
   uint rowId = 1;
   try {
-    while (getline(tableFile, line))
-    {
+    while (getline(tableFile, line)) {
       parseRow(line, rowId++);
     }
   } catch (CellTypeException e) {
@@ -165,7 +164,7 @@ void Table::parseRow(std::string rawRow, uint rowId) {
 void Table::printRowCells(const std::vector<Cell> &rowCells) {
   FormulaEvaluator evaluator;
   for (int i = 0; i < rowCells.size(); i++) {
-    string content = evaluator.evaluate(rowCells[i], parsedTable);
+    String content(evaluator.evaluate(rowCells[i], parsedTable).c_str()); // TODO;
 
     if (longestCellLength > content.size()) {
       uint whiteSpaces = longestCellLength - content.size();
@@ -179,14 +178,14 @@ void Table::printRowCells(const std::vector<Cell> &rowCells) {
 void Table::printEmptyRowCells(const std::vector<Cell> &rowCells) {
   if (rowCells.size() < columnCount) {
     for (int i = 0; i < columnCount - rowCells.size(); i++) {
-      string content = formatCellContent("", longestCellLength);
+      String content = formatCellContent("", longestCellLength);
       std::cout << content << '|';
     }
   }
 }
 
-string Table::formatCellContent(const string &cellContent, uint whiteSpaces) {
-  string content = cellContent;
+String Table::formatCellContent(const String &cellContent, uint whiteSpaces) {
+  String content(cellContent.c_str());
   char* intervals = new char[whiteSpaces + 1];
 
   for (int i = 0; i < whiteSpaces; i++) {
@@ -194,9 +193,12 @@ string Table::formatCellContent(const string &cellContent, uint whiteSpaces) {
   }
 
   intervals[whiteSpaces] = '\0';
-  content += intervals;
+  String result(intervals);
 
   delete[] intervals;
+
+  content += result;
+
   return content;
 }
 

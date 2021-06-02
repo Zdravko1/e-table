@@ -9,7 +9,7 @@ class PowerAction: virtual public FormulaAction {
       return '^';
     }
 
-    virtual string evaluate(int firstNumber, int secondNumber) override {
+    virtual string evaluate(double firstNumber, double secondNumber) override {
       return std::to_string(pow(firstNumber, secondNumber));
     }
 };

@@ -22,12 +22,6 @@ class CellTypeUtil {
     }
 
     static bool isDecimal(const string &rawContent) {
-      string content = rawContent;
-
-      if (content[0] == '+' || content[0] == '-') {
-        content = content.substr(0, 1);
-      }
-
       int dotPos = rawContent.find('.');
       if (dotPos == string::npos) {
         return false;

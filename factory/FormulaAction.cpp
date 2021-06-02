@@ -4,6 +4,7 @@
 // delete
 #include <iostream>
 
+// refactor...
 string FormulaAction::execute(const string &content, std::map<uint, std::vector<Cell>> &table) {
   char action = getAction();
   uint delimiterPos = content.find(action);
@@ -11,50 +12,82 @@ string FormulaAction::execute(const string &content, std::map<uint, std::vector<
   string firstElement = content.substr(0, delimiterPos);
   string secondElement = content.substr(delimiterPos + 1, content.size() - delimiterPos);
 
-  int firstNumber = 0;
-  int secondNumber = 0;
+  double firstNumber = 0;
+  double secondNumber = 0;
 
   // extract
-  if ((CellTypeUtil::isInteger(firstElement)
-    && CellTypeUtil::isInteger(secondElement))
-   || (CellTypeUtil::isDecimal(firstElement)
-    && CellTypeUtil::isDecimal(secondElement))) {
+  if ((CellTypeUtil::isInteger(firstElement) || CellTypeUtil::isDecimal(firstElement))
+   && (CellTypeUtil::isInteger(secondElement) || CellTypeUtil::isDecimal(secondElement))) {
     
-    firstNumber = stoi(firstElement);
-    secondNumber = stoi(secondElement);
+    if (CellTypeUtil::isInteger(firstElement)) {
+      firstNumber = stoi(firstElement);
+    } else {
+      firstNumber = stod(firstElement);
+    }
+
+    if (CellTypeUtil::isInteger(secondElement)) {
+      secondNumber = stoi(secondElement);
+    } else {
+      secondNumber = stod(secondElement);
+    }
   }
 
   if (isCellReference(firstElement) && isCellReference(secondElement)) {
     Cell* leftCell = getCell(extractRow(firstElement), extractCol(firstElement), table);
     if (leftCell != nullptr && (leftCell->getType() == CellType::INTEGER || leftCell->getType() == CellType::DECIMAL)) {
-      firstNumber = stoi(leftCell->getContent());
+      if (leftCell->getType() == CellType::INTEGER) {
+        firstNumber = stoi(leftCell->getContent());
+      } else {
+        firstNumber = stod(leftCell->getContent());
+      }
     }
 
     Cell* rightCell = getCell(extractRow(secondElement), extractCol(secondElement), table);
     if (rightCell != nullptr && (rightCell->getType() == CellType::INTEGER || rightCell->getType() == CellType::DECIMAL)) {
-      secondNumber = stoi(rightCell->getContent());
+      if (rightCell->getType() == CellType::INTEGER) {
+        secondNumber = stoi(rightCell->getContent());
+      } else {
+        secondNumber = stod(rightCell->getContent());
+      }
     }
   }
 
   if (isCellReference(firstElement) && (CellTypeUtil::isInteger(secondElement) || CellTypeUtil::isDecimal(secondElement))) {
     Cell* cell = getCell(extractRow(firstElement), extractCol(firstElement), table);
+
     if (cell != nullptr && (cell->getType() == CellType::INTEGER || cell->getType() == CellType::DECIMAL)) {
-      firstNumber = stoi(cell->getContent());
+      if (cell->getType() == CellType::INTEGER) {
+        firstNumber = stoi(cell->getContent());
+      } else {
+        firstNumber = stod(cell->getContent());
+      }
     }
 
-    secondNumber = stoi(secondElement);
+    if (CellTypeUtil::isInteger(secondElement)) {
+      secondNumber = stoi(secondElement);
+    } else {
+      secondNumber = stod(secondElement);
+    }
   }
 
   if (isCellReference(secondElement) && (CellTypeUtil::isInteger(firstElement) || CellTypeUtil::isDecimal(firstElement))) {
     Cell* cell = getCell(extractRow(secondElement), extractCol(secondElement), table);
     if (cell != nullptr && (cell->getType() == CellType::INTEGER || cell->getType() == CellType::DECIMAL)) {
-      secondNumber = stoi(cell->getContent());
+      if (cell->getType() == CellType::INTEGER) {
+        secondNumber = stoi(cell->getContent());
+      } else {
+        secondNumber = stod(cell->getContent());
+      }
     }
 
-    firstNumber = stoi(firstElement);
+    if (CellTypeUtil::isInteger(firstElement)) {
+      firstNumber = stoi(firstElement);
+    } else {
+      firstNumber = stod(firstElement);
+    }
   }
 
-  return evaluate(firstNumber, secondNumber);
+  return trimTrailingZeros(evaluate(firstNumber, secondNumber));
 }
 
 Cell* FormulaAction::getCell(uint row, uint col, std::map<uint, std::vector<Cell>> &table) {
@@ -92,4 +125,25 @@ uint FormulaAction::extractCol(const string &element) {
 
 bool FormulaAction::isCellReference(const string &element) {
   return element.find('R') != string::npos && element.find('C') != string::npos;
+}
+
+string FormulaAction::trimTrailingZeros(const string &evaluation) {
+  int trailingZeroCount = 0;
+  bool isDecimal = false;
+
+  for (int i = evaluation.size() - 1; i > 0; i--) {
+    if (evaluation[i] != '0') {
+      isDecimal = evaluation[i] == '.'; 
+      break;
+    }
+    trailingZeroCount++;
+  }
+
+  string result = evaluation.substr(0, evaluation.size() - trailingZeroCount);
+
+  if (isDecimal) {
+    result = result.substr(0, result.size() - 1);
+  }
+
+  return result;
 }

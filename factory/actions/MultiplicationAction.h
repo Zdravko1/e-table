@@ -8,7 +8,7 @@ class MultiplicationAction: virtual public FormulaAction {
       return '*';
     }
 
-    virtual string evaluate(int firstNumber, int secondNumber) override {
+    virtual string evaluate(double firstNumber, double secondNumber) override {
       return std::to_string(firstNumber * secondNumber);
     }
 };

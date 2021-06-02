@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include "Cell.h"
+#include "util/String.h"
 
 using uint = unsigned int;
 using string = std::string;
@@ -21,7 +22,7 @@ class Table
 		void parseRow(string rawRow, uint rowId);
 		void printRowCells(const std::vector<Cell> &rowCells);
 		void printEmptyRowCells(const std::vector<Cell> &rowCells);
-		string formatCellContent(const string &cellContent, uint whiteSpaces);
+		String formatCellContent(const String &cellContent, uint whiteSpaces);
 		Cell* getCell(uint row, uint col);
 
 	public:

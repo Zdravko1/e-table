@@ -20,8 +20,8 @@ class TableApplication {
     }
     void run() {
       cout << "Application has started." << endl;
-      cout << "> " << endl;
       while (running) {
+        cout << "> ";
         char input[256];
         cin.getline(input, 256);
         std::vector<string> commands;
@@ -29,6 +29,8 @@ class TableApplication {
 
         if (commands[0] == "open") {
           table.open(commands[1]);
+        } else if (commands[0] == "print") {
+          table.print();
         } else if (commands[0] == "edit") {
           // int validation?
           table.edit(stoi(commands[1]), stoi(commands[2]), commands[3]);

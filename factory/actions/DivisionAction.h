@@ -8,7 +8,7 @@ class DivisionAction: virtual public FormulaAction {
       return '/';
     }
 
-    virtual string evaluate(int firstNumber, int secondNumber) override {
+    virtual string evaluate(double firstNumber, double secondNumber) override {
       if (secondNumber == 0) {
         return "ERROR";
       }
