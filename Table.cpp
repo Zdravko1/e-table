@@ -24,7 +24,7 @@ void Table::open(std::string fileName) {
   } catch (CellTypeException e) {
     tableFile.close();
     close();
-    std::cout << "Error: row " << e.getRow() << ", col " << e.getCol() << ", " << e.getContent() << " is unknown type.";
+    std::cout << "Error: row " << e.getRow() << ", col " << e.getCol() << ", " << e.getContent() << " is unknown type." << std::endl;
     return;
   }
 
@@ -56,15 +56,17 @@ void Table::edit(uint row, uint col, const string &content) {
 
   CellParser parser;
 
-  CellType newCellType = parser.parseCellType(content);
+  Cell newCell;
 
-  if (newCellType == CellType::UNKNOWN) {
-    std::cout << "Error: row " << row << ", col " << col << ", " << content << " is unknown type.";
+  try {
+    newCell = parser.parseCell(content, row, col);
+  } catch (CellTypeException e) {
+    std::cout << "Error: row " << e.getRow() << ", col " << e.getCol() << ", " << e.getContent() << " is unknown type." << std::endl;
     return;
   }
 
-  cell->setContent(content);
-  cell->setType(newCellType);
+  cell->setContent(newCell.getContent());
+  cell->setType(newCell.getType());
   evaluateCells();
 }
 

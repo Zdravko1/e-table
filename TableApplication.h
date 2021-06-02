@@ -43,6 +43,13 @@ class TableApplication {
         } else if (commands[0] == "exit") {
           cout << "Exitig..." << endl;
           running = false;
+        } else if (commands[0] == "help") {
+          cout << "Following commands are available:" << endl
+          << "open <file_name> - opens a file" << endl
+          << "close - closes the currently opened file" << endl
+          << "save - saves the currently opened file" << endl
+          << "saveas - saves the currently opened file in a new <file_name>" << endl
+          << "exit - exits the program." << endl;
         } else {
           cout << "Invalid command." << endl;
         }

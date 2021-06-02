@@ -29,13 +29,10 @@ class Table
 		Table() {}
 		void open(string fileName);
 		void print();
-		// TODO: implement
 		void edit(uint row, uint col, const string &content);
 		void close();
 		void save();
 		void saveAs(const string &fileName);
-		void help();
-		// end implement
 
 		friend std::ostream& operator<<(std::ostream &os, const Table &table);
 };

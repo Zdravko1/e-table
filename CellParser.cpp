@@ -7,6 +7,7 @@ Cell CellParser::parseCell(string rawCell, uint rowId, uint columnId) {
 
   // trim whitespaces
   content = trim(content);
+  
   // determine the cell type, eg. INTEGER/DECIMAL/STRING/FORMULA
   CellType cellType = parseCellType(content);
 
