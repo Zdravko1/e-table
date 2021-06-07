@@ -16,11 +16,6 @@ class FormulaAction {
   private:
     virtual string evaluate(double firstNumber, double secondNumber) = 0;
     virtual char getAction() const = 0;
-
-    bool isCellReference(const string &element);
-    Cell* getCell(uint row, uint col, std::map<uint, std::vector<Cell>> &table);
-    uint extractRow(const string &element);
-    uint extractCol(const string &element);
     string trimTrailingZeros(const string &evaluation);
 };
 

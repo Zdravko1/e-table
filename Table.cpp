@@ -53,13 +53,13 @@ void Table::print() {
 }
 
 void Table::edit(uint row, uint col, const string &content) {
-  Cell* cell = getCell(row, col);
+  CellParser parser;
+
+  Cell* cell = parser.getCell(row, col, parsedTable);
 
   if (cell == nullptr) {
     std::cout << "Unknown cell on row: " << row << ", col: " << col << ".";
   }
-
-  CellParser parser;
 
   Cell newCell;
 
@@ -209,20 +209,4 @@ String Table::formatCellContent(const String &cellContent, uint whiteSpaces) {
   content += result;
 
   return content;
-}
-
-Cell* Table::getCell(uint row, uint col) {
-  std::map<uint, std::vector<Cell>>::iterator it;
-
-  for (it = parsedTable.begin(); it != parsedTable.end(); it++) {
-    if (it->first == row) {
-      for (int i = 0; i < it->second.size(); i++) {
-        if (it->second[i].getColumnId() == col) {
-          return &it->second[i];
-        }
-      }
-    }
-  }
-
-  return nullptr;
 }

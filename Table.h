@@ -23,7 +23,6 @@ class Table
 		void printRowCells(const std::vector<Cell> &rowCells);
 		void printEmptyRowCells(const std::vector<Cell> &rowCells);
 		String formatCellContent(const String &cellContent, uint whiteSpaces);
-		Cell* getCell(uint row, uint col);
 
 	public:
 		Table() {}
