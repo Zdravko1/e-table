@@ -1,5 +1,4 @@
 #include "FormulaEvaluator.h"
-#include "CellTypeUtil.h"
 #include "factory/FormulaEvaluationFactory.h"
 
 string FormulaEvaluator::evaluate(const Cell &cell, std::map<uint, std::vector<Cell>> &table) {

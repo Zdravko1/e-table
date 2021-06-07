@@ -27,7 +27,7 @@ class Table
 
 	public:
 		Table() {}
-		void open(string fileName);
+		void open(const string &fileName);
 		void print();
 		void edit(uint row, uint col, const string &content);
 		void close();

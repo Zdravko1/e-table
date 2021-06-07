@@ -1,5 +1,5 @@
 #include "FormulaAction.h"
-#include "../CellTypeUtil.h"
+#include "../CellParser.h"
 
 // delete
 #include <iostream>
@@ -15,17 +15,19 @@ string FormulaAction::execute(const string &content, std::map<uint, std::vector<
   double firstNumber = 0;
   double secondNumber = 0;
 
+  CellParser parser;
+
   // extract
-  if ((CellTypeUtil::isInteger(firstElement) || CellTypeUtil::isDecimal(firstElement))
-   && (CellTypeUtil::isInteger(secondElement) || CellTypeUtil::isDecimal(secondElement))) {
+  if ((parser.isInteger(firstElement) || parser.isDecimal(firstElement))
+   && (parser.isInteger(secondElement) || parser.isDecimal(secondElement))) {
     
-    if (CellTypeUtil::isInteger(firstElement)) {
+    if (parser.isInteger(firstElement)) {
       firstNumber = stoi(firstElement);
     } else {
       firstNumber = stod(firstElement);
     }
 
-    if (CellTypeUtil::isInteger(secondElement)) {
+    if (parser.isInteger(secondElement)) {
       secondNumber = stoi(secondElement);
     } else {
       secondNumber = stod(secondElement);
@@ -52,7 +54,7 @@ string FormulaAction::execute(const string &content, std::map<uint, std::vector<
     }
   }
 
-  if (isCellReference(firstElement) && (CellTypeUtil::isInteger(secondElement) || CellTypeUtil::isDecimal(secondElement))) {
+  if (isCellReference(firstElement) && (parser.isInteger(secondElement) || parser.isDecimal(secondElement))) {
     Cell* cell = getCell(extractRow(firstElement), extractCol(firstElement), table);
 
     if (cell != nullptr && (cell->getType() == CellType::INTEGER || cell->getType() == CellType::DECIMAL)) {
@@ -63,14 +65,14 @@ string FormulaAction::execute(const string &content, std::map<uint, std::vector<
       }
     }
 
-    if (CellTypeUtil::isInteger(secondElement)) {
+    if (parser.isInteger(secondElement)) {
       secondNumber = stoi(secondElement);
     } else {
       secondNumber = stod(secondElement);
     }
   }
 
-  if (isCellReference(secondElement) && (CellTypeUtil::isInteger(firstElement) || CellTypeUtil::isDecimal(firstElement))) {
+  if (isCellReference(secondElement) && (parser.isInteger(firstElement) || parser.isDecimal(firstElement))) {
     Cell* cell = getCell(extractRow(secondElement), extractCol(secondElement), table);
     if (cell != nullptr && (cell->getType() == CellType::INTEGER || cell->getType() == CellType::DECIMAL)) {
       if (cell->getType() == CellType::INTEGER) {
@@ -80,7 +82,7 @@ string FormulaAction::execute(const string &content, std::map<uint, std::vector<
       }
     }
 
-    if (CellTypeUtil::isInteger(firstElement)) {
+    if (parser.isInteger(firstElement)) {
       firstNumber = stoi(firstElement);
     } else {
       firstNumber = stod(firstElement);

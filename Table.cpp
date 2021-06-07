@@ -6,17 +6,21 @@
 #include <string>
 #include <iostream>
 
-void Table::open(std::string fileName) {
+using std::cout;
+using std::endl;
+
+void Table::open(const std::string &fileName) {
   std::string line;
 	std::ifstream tableFile(fileName);
 
 	if (!tableFile.good())
 	{
-		std::cout << "Could not open file." << std::endl;
+		std::cout << "Could not open the given file: " << fileName << "." << std::endl;
 		return;
 	}
 
   uint rowId = 1;
+
   try {
     while (getline(tableFile, line)) {
       parseRow(line, rowId++);
@@ -24,7 +28,8 @@ void Table::open(std::string fileName) {
   } catch (CellTypeException e) {
     tableFile.close();
     close();
-    std::cout << "Error: row " << e.getRow() << ", col " << e.getCol() << ", " << e.getContent() << " is unknown type." << std::endl;
+    std::cout << "Error: row " << e.getRow() << ", col " << e.getCol()
+              << ", " << e.getContent() << " is unknown type." << std::endl;
     return;
   }
 
@@ -165,8 +170,9 @@ void Table::parseRow(std::string rawRow, uint rowId) {
 
 void Table::printRowCells(const std::vector<Cell> &rowCells) {
   FormulaEvaluator evaluator;
+
   for (int i = 0; i < rowCells.size(); i++) {
-    String content(evaluator.evaluate(rowCells[i], parsedTable).c_str()); // TODO;
+    String content(rowCells[i].getEvaluatedContent().c_str());
 
     if (longestCellLength > content.size()) {
       uint whiteSpaces = longestCellLength - content.size();
@@ -180,7 +186,8 @@ void Table::printRowCells(const std::vector<Cell> &rowCells) {
 void Table::printEmptyRowCells(const std::vector<Cell> &rowCells) {
   if (rowCells.size() < columnCount) {
     for (int i = 0; i < columnCount - rowCells.size(); i++) {
-      String content = formatCellContent("", longestCellLength);
+      String content = "";
+      content = formatCellContent(content, longestCellLength);
       std::cout << content << '|';
     }
   }

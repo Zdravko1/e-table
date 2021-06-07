@@ -1,8 +1,7 @@
 #include "CellParser.h"
-#include "CellTypeUtil.h"
 #include "CellTypeException.h"
 
-Cell CellParser::parseCell(string rawCell, uint rowId, uint columnId) {
+Cell CellParser::parseCell(const string &rawCell, uint rowId, uint columnId) {
   string content = rawCell;
 
   // trim whitespaces
@@ -21,7 +20,63 @@ Cell CellParser::parseCell(string rawCell, uint rowId, uint columnId) {
   return Cell(content, cellType, rowId, columnId);
 }
 
-string CellParser::trim(string rawContent) {
+CellType CellParser::parseCellType(const string &rawContent) {
+  if (isInteger(rawContent)) {
+    return CellType::INTEGER;
+  }
+
+  if (isDecimal(rawContent)) {
+    return CellType::DECIMAL;
+  }
+
+  // formula
+  if (isFormula(rawContent)) {
+    return CellType::FORMULA;
+  }
+
+  if (isString(rawContent)) {
+    return CellType::STRING;
+  }
+
+  return CellType::UNKNOWN;
+}
+
+bool CellParser::isInteger(const string &rawContent) {
+      int idx = 0;
+      if (rawContent[idx] == '+' || rawContent[idx] == '-') {
+        idx++;
+      }
+
+      for (idx; idx < rawContent.size(); idx++) {
+        if (rawContent[idx] < '0' || rawContent[idx] > '9') {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+bool CellParser::isDecimal(const string &rawContent) {
+  int dotPos = rawContent.find('.');
+  if (dotPos == string::npos) {
+    return false;
+  }
+
+  string leftSide = rawContent.substr(0, dotPos);
+  string rightSide = rawContent.substr(dotPos + 1, rawContent.size() - dotPos - 1);
+
+  return isInteger(leftSide) && isInteger(rightSide);
+}
+
+bool CellParser::isFormula(const string &rawContent) {
+  return rawContent.size() > 1 && rawContent[0] == '=';
+}
+
+bool CellParser::isString(const string &rawContent) {
+  return rawContent.size() > 2 && rawContent[0] == '"' && rawContent[rawContent.size() - 1] == '"';
+}
+
+string CellParser::trim(const string &rawContent) {
   string content = rawContent;
   bool hasWhiteSpaceOnly = true;
 
@@ -59,28 +114,7 @@ string CellParser::trim(string rawContent) {
   return content;
 }
 
-CellType CellParser::parseCellType(const string &rawContent) {
-  if (CellTypeUtil::isInteger(rawContent)) {
-    return CellType::INTEGER;
-  }
-
-  if (CellTypeUtil::isDecimal(rawContent)) {
-    return CellType::DECIMAL;
-  }
-
-  // formula
-  if (CellTypeUtil::isFormula(rawContent)) {
-    return CellType::FORMULA;
-  }
-
-  if (CellTypeUtil::isString(rawContent)) {
-    return CellType::STRING;
-  }
-
-  return CellType::UNKNOWN;
-}
-
-string CellParser::removeQuotes(string rawContent, CellType cellType) {
+string CellParser::removeQuotes(const string &rawContent, CellType cellType) {
   string content = rawContent;
 
   if (cellType == CellType::STRING) {

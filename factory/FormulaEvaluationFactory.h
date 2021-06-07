@@ -17,6 +17,7 @@ class FormulaEvaluationFactory {
       divisionAction = new DivisionAction();
       powerAction = new PowerAction();
     }
+
     ~FormulaEvaluationFactory() {
       delete additionAction;
       delete subtractionAction;
@@ -24,6 +25,7 @@ class FormulaEvaluationFactory {
       delete divisionAction;
       delete powerAction;
     }
+
     FormulaAction* getAction(FormulaType type) {
       switch(type) {
         case FormulaType::ADDITION:
@@ -39,6 +41,7 @@ class FormulaEvaluationFactory {
         default: return nullptr;
       }
     }
+
   private:
     AdditionAction* additionAction;
     SubtractionAction* subtractionAction;

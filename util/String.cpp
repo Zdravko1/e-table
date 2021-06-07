@@ -122,8 +122,10 @@ const char* String::c_str() const {
 uint String::_strlen(const char* str) {
   uint len = 0;
   int i = 0;
+
   while (str[i++] != '\0')
     len++;
+
   return len;
 }
 

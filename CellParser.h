@@ -6,12 +6,16 @@ using string = std::string;
 
 class CellParser {
   private:
-    string trim(string rawContent);
-    string removeQuotes(string content, CellType cellType);
+    string trim(const string &rawContent);
+    string removeQuotes(const string &content, CellType cellType);
   public:
     CellParser() {};
-    Cell parseCell(string rawCell, uint rowId, uint columnId);
+    Cell parseCell(const string &rawCell, uint rowId, uint columnId);
     CellType parseCellType(const string &rawContent);
+    bool isInteger(const string &rawContent);
+    bool isDecimal(const string &rawContent);
+    bool isFormula(const string &rawContent);
+    bool isString(const string &rawContent);
 };
 
 #endif
