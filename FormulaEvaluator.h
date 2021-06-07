@@ -2,9 +2,8 @@
 #define FORMULA_CALCULATOR_H
 #include "Cell.h"
 #include "factory/FormulaType.h"
+#include "util/Vector.h"
 #include <string>
-#include <map>
-#include <vector>
 
 using string = std::string;
 
@@ -15,7 +14,7 @@ class FormulaEvaluator {
 
   public:
     FormulaEvaluator() {};
-    string evaluate(const Cell &cell, std::map<uint, std::vector<Cell>> &table);
+    string evaluate(const Cell &cell, Vector<Vector<Cell>> &table);
 };
 
 #endif

@@ -1,7 +1,6 @@
 #ifndef CELL_PARSER_H
 #define CELL_PARSER_H
-#include <map>
-#include <vector>
+#include "util/Vector.h"
 #include "Cell.h"
 
 using string = std::string;
@@ -21,8 +20,8 @@ class CellParser {
     CellParser() {};
     Cell parseCell(const string &rawCell, uint rowId, uint columnId);
     CellType parseCellType(const string &rawContent);
-    double parseContent(const string &rawContent, std::map<uint, std::vector<Cell>> &table);
-    Cell* getCell(uint row, uint col, std::map<uint, std::vector<Cell>> &table);
+    double parseContent(const string &rawContent, Vector<Vector<Cell>> &table);
+    Cell* getCell(uint row, uint col, Vector<Vector<Cell>> &table);
 
     bool isInteger(const string &rawContent);
     bool isDecimal(const string &rawContent);

@@ -1,9 +1,8 @@
-#ifndef FORMULA_EVALUATION_ACTION_H
-#define FORMULA_EVALUATION_ACTION_H
+#ifndef FORMULA_ACTION_H
+#define FORMULA_ACTION_H
 #include <string>
-#include <map>
-#include <vector>
 #include "../Cell.h"
+#include "../util/Vector.h"
 
 using string = std::string;
 using uint = unsigned int;
@@ -11,7 +10,7 @@ using uint = unsigned int;
 class FormulaAction {
   public:
     FormulaAction() {};
-    string execute(const string &content, std::map<uint, std::vector<Cell>> &table);
+    string execute(const string &content, Vector<Vector<Cell>> &table);
 
   private:
     virtual string evaluate(double firstNumber, double secondNumber) = 0;

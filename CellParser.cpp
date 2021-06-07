@@ -41,7 +41,7 @@ CellType CellParser::parseCellType(const string &rawContent) {
   return CellType::UNKNOWN;
 }
 
-double CellParser::parseContent(const string &rawContent, std::map<uint, std::vector<Cell>> &table) {
+double CellParser::parseContent(const string &rawContent, Vector<Vector<Cell>> &table) {
   if (isNumber(rawContent)) {
     return stod(rawContent);
   }
@@ -121,14 +121,12 @@ uint CellParser::extractCol(const string &element) {
   return std::stoi(col);
 }
 
-Cell* CellParser::getCell(uint row, uint col, std::map<uint, std::vector<Cell>> &table) {
-  std::map<uint, std::vector<Cell>>::iterator it;
-
-  for (it = table.begin(); it != table.end(); it++) {
-    if (it->first == row) {
-      for (int i = 0; i < it->second.size(); i++) {
-        if (it->second[i].getColumnId() == col) {
-          return &it->second[i];
+Cell* CellParser::getCell(uint row, uint col, Vector<Vector<Cell>> &table) {
+  for (int i = 0; i < table.size(); i++) {
+    if (i == row - 1) {
+      for (int j = 0; j < table[i].size(); j++) {
+        if (table[i][j].getColumnId() == col) {
+          return &table[i][j];
         }
       }
     }

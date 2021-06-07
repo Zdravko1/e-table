@@ -41,13 +41,11 @@ void Table::open(const std::string &fileName) {
 }
 
 void Table::print() {
-  std::map<uint, std::vector<Cell>>::iterator it;
-
-  for (it = parsedTable.begin(); it != parsedTable.end(); it++) {
+  for (int i = 0; i < parsedTable.size(); i++) {
     // print the row cells and add blank cells 
     // if the row has less cells than the row with the highest cell count
-    printRowCells(it->second);
-    printEmptyRowCells(it->second);
+    printRowCells(parsedTable[i]);
+    printEmptyRowCells(parsedTable[i]);
     std::cout << std::endl;
   }
 }
@@ -66,7 +64,8 @@ void Table::edit(uint row, uint col, const string &content) {
   try {
     newCell = parser.parseCell(content, row, col);
   } catch (CellTypeException e) {
-    std::cout << "Error: row " << e.getRow() << ", col " << e.getCol() << ", " << e.getContent() << " is unknown type." << std::endl;
+    std::cout << "Error: row " << e.getRow() << ", col " << e.getCol() << ", " 
+              << e.getContent() << " is unknown type." << std::endl;
     return;
   }
 
@@ -94,10 +93,10 @@ void Table::close() {
 }
 
 std::ostream& operator<<(std::ostream &os, const Table &table) {
-  for (const std::pair<uint, std::vector<Cell>> pair : table.parsedTable) {
-    for (int i = 0; i < pair.second.size(); i++) {
-      os << pair.second[i];
-      if (i < pair.second.size() - 1) {
+  for (int j = 0; j < table.parsedTable.size(); j++) {
+    for (int i = 0; i < table.parsedTable[j].size(); i++) {
+      os << table.parsedTable[j][i];
+      if (i < table.parsedTable[j].size() - 1) {
         os << ',';
       } else {
         os << '\n';
@@ -108,12 +107,11 @@ std::ostream& operator<<(std::ostream &os, const Table &table) {
 }
 
 void Table::evaluateCells() {
-  std::map<uint, std::vector<Cell>>::iterator it;
   FormulaEvaluator evaluator;
 
-  for (it = parsedTable.begin(); it != parsedTable.end(); it++) {
-    for (int i = 0; i < it->second.size(); i++) {
-      Cell &cell = it->second[i];
+  for (int i = 0; i < parsedTable.size(); i++) {
+    for (int j = 0; j < parsedTable[i].size(); j++) {
+      Cell &cell = parsedTable[i][j];
       string evaluatedContent = evaluator.evaluate(cell, parsedTable);
       cell.setEvaluatedContent(evaluatedContent);
     }
@@ -128,10 +126,10 @@ void Table::parseRow(std::string rawRow, uint rowId) {
   int currentParsePos = 0;
   int columnId = 1;
 
-  std::vector<Cell> row;
+  Vector<Cell> row;
 
   if (rawRow.size() == 0) {
-    parsedTable.insert(std::pair<uint, std::vector<Cell>>(rowId, row));
+    parsedTable.add(row);
     return;
   }
 
@@ -146,7 +144,7 @@ void Table::parseRow(std::string rawRow, uint rowId) {
       }
       // end refactor/extract
 
-      row.push_back(cell);
+      row.add(cell);
 
       // move current position + 1 to skip the delimiter
       currentParsePos = i + 1;
@@ -162,13 +160,14 @@ void Table::parseRow(std::string rawRow, uint rowId) {
   }
   // end refactor/extract
 
-  row.push_back(cell);
+  row.add(cell);
 
-  parsedTable.insert(std::pair<uint, std::vector<Cell>>(rowId, row));
+  parsedTable.add(row);
+
   columnCount = columnCount < columnId ? columnId : columnCount;
 }
 
-void Table::printRowCells(const std::vector<Cell> &rowCells) {
+void Table::printRowCells(const Vector<Cell> &rowCells) {
   FormulaEvaluator evaluator;
 
   for (int i = 0; i < rowCells.size(); i++) {
@@ -183,7 +182,7 @@ void Table::printRowCells(const std::vector<Cell> &rowCells) {
   }
 }
 
-void Table::printEmptyRowCells(const std::vector<Cell> &rowCells) {
+void Table::printEmptyRowCells(const Vector<Cell> &rowCells) {
   if (rowCells.size() < columnCount) {
     for (int i = 0; i < columnCount - rowCells.size(); i++) {
       String content = "";

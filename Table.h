@@ -1,9 +1,8 @@
 #ifndef TABLE_H
 #define TABLE_H
 #include <string>
-#include <map>
-#include <vector>
 #include "Cell.h"
+#include "util/Vector.h"
 #include "util/String.h"
 
 using uint = unsigned int;
@@ -16,12 +15,12 @@ class Table
 		uint columnCount = 0;
 		uint longestCellLength = 0;
 		string file;
-		std::map<uint, std::vector<Cell>> parsedTable;
+		Vector<Vector<Cell>> parsedTable;
 
 		void evaluateCells();
 		void parseRow(string rawRow, uint rowId);
-		void printRowCells(const std::vector<Cell> &rowCells);
-		void printEmptyRowCells(const std::vector<Cell> &rowCells);
+		void printRowCells(const Vector<Cell> &rowCells);
+		void printEmptyRowCells(const Vector<Cell> &rowCells);
 		String formatCellContent(const String &cellContent, uint whiteSpaces);
 
 	public:

@@ -1,7 +1,7 @@
 #include "FormulaAction.h"
 #include "../CellParser.h"
 
-string FormulaAction::execute(const string &content, std::map<uint, std::vector<Cell>> &table) {
+string FormulaAction::execute(const string &content, Vector<Vector<Cell>> &table) {
   char action = getAction();
   uint delimiterPos = content.find(action);
 

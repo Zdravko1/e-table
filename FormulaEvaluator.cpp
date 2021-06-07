@@ -1,7 +1,7 @@
 #include "FormulaEvaluator.h"
 #include "factory/FormulaEvaluationFactory.h"
 
-string FormulaEvaluator::evaluate(const Cell &cell, std::map<uint, std::vector<Cell>> &table) {
+string FormulaEvaluator::evaluate(const Cell &cell, Vector<Vector<Cell>> &table) {
   if (cell.getType() != CellType::FORMULA) {
     return cell.getContent();
   }
